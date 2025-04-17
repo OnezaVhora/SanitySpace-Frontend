@@ -11,7 +11,7 @@ chatForm.addEventListener("submit", async (e) => {
     userInput.value = "";
 
     try {
-        const res = await fetch("https://your-backend-url.onrender.com/chat", {
+        const res = await fetch("", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
