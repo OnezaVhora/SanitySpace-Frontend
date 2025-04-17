@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Box Breathing</title>
+    <meta name="description" content="Visual aid for box breathing method">
+    <meta name="keywords" content="box breathing">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="minstyle.io.min.css">
+    <style>
+      body {
+        background-color: #4297e2; /* Background color */
+        font-family: Arial, sans-serif;
+        display: flex; /* Enable flexbox */
+        justify-content: center; /* Horizontally center */
+        align-items: center; /* Vertically center */
+        height: 100vh; /* Ensure the body takes up the full viewport height */
+        margin: 0; /* Remove default margin */
+      }
+
+      .wrapper {
+        padding: 20px;
+        background-color: inherit;
+        width: 70%; /* Width for the content wrapper */
+        max-width: 800px; /* Maximum width for better control */
+        display: flex;
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center; /* Center elements inside the wrapper */
+      }
+
+      #drawing {
+        border: solid 1px black;
+        width: 100%;
+        height: auto; /* Make sure the height is proportional */
+      }
+
+      #instructions {
+        width: 100%;
+      }
+
+      .adjustors-section {
+        margin-top: 20px;
+        font-size: 0.8rem; /* Reduced font size */
+      }
+
+      h3 {
+        margin-top: 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='wrapper'>
+      <table id='instructions'>
+        <tr>
+          <td>
+            <h1 id='timer'>Box Breathing</h1>
+          </td>
+          <td align='right'>
+            <button id='startStop' type='button' class='ms-secondary'>Start</button>
+          </td>
+        </tr>
+      </table>
+      <canvas id='drawing' width='2000' height='1000'></canvas>
+      <br/>
+      <p><a href='#' id='full-screen'>Full Screen</a></p>
+    </div>
+
+    <br/>
+
+<form action="" method="get">
+  <div class="row">
+    <div class="ms-form-group">
+      <label for="seconds">Seconds:</label>
+      <input type="text" id="seconds" name="seconds">
+    </div>
+  </div>
+
+  <div class="adjustors-section">
+    <h3>Color Adjustors</h3>
+    <div class="row">
+      <div class="col-sm">
+        <div class="ms-form-group">
+          <label for='circleColor1'>Circle Color 1</label>
+          <input type='color' id="circleColor1" name="circleColor1">
+        </div>
+        <div class="ms-form-group">
+          <label for='circleColor2'>Circle Color 2</label>
+          <input type='color' id="circleColor2" name="circleColor2">
+        </div>
+      </div>
+      <div class="col-sm">
+        <div class="ms-form-group">
+          <label for='bgColor1'>Background Color 1</label>
+          <input type='color' id="bgColor1" name="bgColor1">
+        </div>
+        <div class="ms-form-group">
+          <label for='bgColor2'>Background Color 2</label>
+          <input type='color' id="bgColor2" name="bgColor2">
+        </div>
+      </div>
+    </div>
+  </div>
+  <input type="submit" value="Update" class='ms-secondary'>
+</form>
+
+    <script>
+      $(document).ready(function() {
+				var drawing = $('#drawing');
+    		var width = drawing.width();
+				var height = width / 2;
+				console.log('html w/h:', width, height);
+    		drawing.css('height', height);
+
+        var c = document.getElementById("drawing");
+        var ctx = c.getContext("2d");
+
+				$('#seconds').val(params('seconds', 5));
+
+				var x = ctx.canvas.width;
+				var y = ctx.canvas.height;
+
+        var timer;
+        var step = 0;
+        var circleWidth = x / 4.5;
+        var seconds = parseInt($('#seconds').val());
+        var secondsLeft = seconds;
+        var interval = 100;
+        var stepsNeeded = seconds * 1000 / interval;
+        var stepDirection = circleWidth / stepsNeeded;
+				console.log('Steps: ', stepsNeeded, stepDirection, seconds);
+
+        var timerDiv = $('#timer')
+        var wait = false;
+				var fullScreen = false;
+
+        var circleX = (x / 2); // - circleWidth;
+        var circleY = (y / 2); // - (circleWidth / 2);
+				console.log('Dimensions: ', x, y, circleWidth, circleX, circleY);
+
+				var bgColor1 = params('bgColor1', '#1b1bff');
+        var bgColor2 = params('bgColor2', '#ffffff');
+				var circleColor1 = params('circleColor1', '#ff0000');
+				var circleColor2 = params('circleColor2', '#ffa500');
+				var circleColor3 = params('circleColor3', '#ffff00');
+				var circleColor4 = params('circleColor4', '#ffffff');
+
+				$('#bgColor1').val(bgColor1);
+				$('#bgColor1Val').val(bgColor1);
+				$('#bgColor2').val(bgColor2);
+				$('#circleColor1').val(circleColor1);
+				$('#circleColor2').val(circleColor2);
+				$('#circleColor3').val(circleColor3);
+				$('#circleColor4').val(circleColor4);
+
+        var grd = ctx.createRadialGradient(circleX - 10, circleY - 10,
+                                           0,
+                                           circleX, circleY,
+                                           circleWidth * 2);
+        grd.addColorStop(0, circleColor1);
+        grd.addColorStop(0.3, circleColor2);
+        grd.addColorStop(0.6, circleColor3);
+        grd.addColorStop(1, circleColor4);
+
+				var rgrd = ctx.createLinearGradient(0, 0, x, y);
+				rgrd.addColorStop(0, bgColor1);
+				rgrd.addColorStop(1, bgColor2);
+
+        resetBox();
+
+        // Fill with gradient
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.arc(circleX, circleY, circleWidth, 0, 2 * Math.PI);
+        ctx.fill();
+
+				var startStop = $('#startStop');
+        startStop.click(function() {
+          if (startStop.html() == 'Stop') {
+            startStop.html('Start');
+						startStop.removeClass('ms-primary');
+						startStop.addClass('ms-secondary');
+            clearInterval(timer);
+          } else {
+            startStop.html('Stop');
+						startStop.removeClass('ms-secondary');
+						startStop.addClass('ms-primary');
+            run();
+          };
+        });
+				drawing.click(function() { startStop.trigger('click') });
+                      
+        function run() {
+          timer = setInterval(function() {
+            secondsLeft -= interval / 1000;
+            updateTime();
+            if (wait) {
+              if (secondsLeft < 0) {
+                secondsLeft = seconds;
+                wait = false;
+              }
+            } else {
+              resetBox();
+
+              var circleSize = circleWidth - step;
+              if (
+                   ((circleSize < Math.abs(stepDirection)) && stepDirection > 0) 
+                   ||
+                   (step < 0 && stepDirection < 0)
+                 ) {
+                stepDirection = stepDirection * -1;
+                secondsLeft = seconds;
+                wait = true;
+              };
+
+              // Fill with gradient
+              ctx.fillStyle = grd;
+              ctx.beginPath();
+              ctx.arc(circleX, circleY, circleSize, 0, 2 * Math.PI);
+              ctx.fill();
+
+              step += stepDirection;
+            };
+          }, interval);
+        };
+
+        function resetBox() {
+          ctx.clearRect(0, 0, x, y);
+          ctx.beginPath();
+          ctx.rect(0,0,x,y);
+          ctx.fillStyle = rgrd;
+          ctx.fill();
+          outlineCircle();
+        };
+
+        function outlineCircle() {
+          ctx.beginPath();
+          ctx.arc(circleX, circleY, circleWidth + 2, 0, 2 * Math.PI);
+          ctx.stroke();
+        };
+
+        function updateTime() {
+          if (secondsLeft > 0) {
+						var sInstruction = 'Breath';
+						if (wait) { 
+							sInstruction = 'Hold';
+						} else {
+							var sdir = 'in';
+							if (stepDirection > 0) { sdir = 'out' };
+							sInstruction = sInstruction + ' ' + sdir;
+						};
+            timerDiv.html(sInstruction + ': ' + Math.ceil(secondsLeft));
+          };
+        };
+
+				$('#full-screen').click(function(e) {
+					e.preventDefault();
+					var elem = document.querySelector("#drawing");
+
+					elem.requestFullscreen()
+						.then(function() {
+							fullScreen = true;
+						})
+						.catch(function(error) {
+							fullScreen = false;
+							alert("Full-screen couldn't be started");
+						});
+				});
+
+        function params(sParam, sDefault) {
+					var sPageURL = window.location.search.substring(1),
+							sURLVariables = sPageURL.split('&'),
+							sParameterName,
+							i;
+
+					for (i = 0; i < sURLVariables.length; i++) {
+						sParameterName = sURLVariables[i].split('=');
+
+						if (sParameterName[0] === sParam) {
+							return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+						}
+					}
+					return sDefault;
+				};
+      });
+    </script>
+  </body>
+</html>

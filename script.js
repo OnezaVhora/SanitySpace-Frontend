@@ -60,30 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   
-    // Breathing animation
-    const breatheBtn = document.getElementById('breathe-btn');
-    if (breatheBtn) {
-      breatheBtn.addEventListener('click', () => {
-        const box = document.createElement('div');
-        box.className = 'breathing-box';
-        document.body.appendChild(box);
-        box.innerHTML = '<p>Breathe In</p>';
-        let phase = 0;
-        const phases = ['Breathe In', 'Hold', 'Breathe Out', 'Hold'];
-        const intervals = [4000, 4000, 4000, 4000];
-  
-        const breathe = () => {
-          box.innerHTML = `<p>${phases[phase]}</p>`;
-          box.style.transform = phase % 2 === 0 ? 'scale(1.5)' : 'scale(1)';
-          setTimeout(() => {
-            phase = (phase + 1) % 4;
-            breathe();
-          }, intervals[phase]);
-        };
-  
-        breathe();
-      });
-    }
   
     // Load Resources from external API
     const resourceBtn = document.getElementById('get-resources');
