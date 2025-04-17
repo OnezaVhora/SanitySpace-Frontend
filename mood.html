@@ -1,0 +1,32 @@
+<!-- mood.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Analysis - SanitySpace</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page mood-page">
+  <header>
+    <h1>SanitySpace</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="journal.html">Journal</a>
+      <a href="mood.html" class="active">Mood Analysis</a>
+      <a href="chat.html">Chat</a>
+      <a href="resources.html">Resources</a>
+      <a href="visuals.html">Visuals</a>
+    </nav>
+  </header>
+  <main>
+    <section class="card">
+      <h2>How are you feeling?</h2>
+      <input type="text" id="mood-input" placeholder="Type your mood...">
+      <button onclick="checkMood()">Analyze Mood</button>
+      <div id="mood-response"></div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

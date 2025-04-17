@@ -1,21 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>SanitySpace</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SanitySpace - Home</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+  <script defer src="main.js"></script>
 </head>
-<body>
-    <div class="container">
-        <h1>SanitySpace</h1>
-        <div id="chat-box">
-            <div id="messages"></div>
-        </div>
-        <form id="chat-form">
-            <input type="text" id="user-input" placeholder="How are you feeling today?" required />
-            <button type="submit">Send</button>
-        </form>
-    </div>
-    <script src="script.js"></script>
+<body class="fade-in">
+  <header>
+    <h1>SanitySpace</h1>
+    <nav>
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="chat.html" class="nav-link">Chat</a>
+      <a href="mood.html" class="nav-link">Mood</a>
+      <a href="journal.html" class="nav-link">Journal</a>
+      <a href="resources.html" class="nav-link">Resources</a>
+      <a href="visuals.html" class="nav-link">Visuals</a>
+    </nav>
+  </header>
+  <main>
+    <section class="breathing">
+      <h2>Practice Breathing</h2>
+      <div class="square-breathing" id="breathing-box">Breathe In</div>
+      <button onclick="startBreathing()">Start Breathing</button>
+    </section>
+
+    <section class="resources-preview">
+      <h2>Mental Health Resources</h2>
+      <ul id="resource-list">
+        <li>National Alliance on Mental Illness (NAMI)</li>
+        <li>BetterHelp Online Therapy</li>
+        <li>Calm App</li>
+        <li>Talkspace</li>
+        <li>Mindful.org</li>
+        <li>988 Suicide & Crisis Lifeline</li>
+        <li>Headspace</li>
+      </ul>
+      <a href="resources.html" class="nav-button">View All Resources</a>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2025 SanitySpace. Breathe. Reflect. Heal.</p>
+  </footer>
 </body>
 </html>
